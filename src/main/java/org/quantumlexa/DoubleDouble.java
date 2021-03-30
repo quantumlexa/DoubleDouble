@@ -182,10 +182,22 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
      * Creates a new DoubleDouble with the value of the argument.
      *
      * @param dd the DoubleDouble value to copy
-     * @return a copy of the input value
+     * @return of the input value
      */
     public static DoubleDouble copy(DoubleDouble dd) {
         return new DoubleDouble(dd);
+    }
+
+
+    public DoubleDouble reset() {
+        this.init(0.0);
+        return this;
+    }
+
+
+    public DoubleDouble of(double d) {
+        this.init(d);
+        return this;
     }
 
     /**
@@ -202,37 +214,20 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
         }
     }
 
-    private final void init(double x) {
+    private void init(double x) {
         this.hi = x;
         this.lo = 0.0;
     }
 
-    private final void init(double hi, double lo) {
+    private void init(double hi, double lo) {
         this.hi = hi;
         this.lo = lo;
     }
 
-    private final void init(DoubleDouble dd) {
+    private void init(DoubleDouble dd) {
         hi = dd.hi;
         lo = dd.lo;
     }
-
-  /*
-  double getHighComponent() { return hi; }
-
-  double getLowComponent() { return lo; }
-  */
-
-    // Testing only - should not be public
-  /*
-  public void RENORM()
-  {
-    double s = hi + lo;
-    double err = lo - (s - hi);
-    hi = s;
-    lo = err;
-  }
-  */
 
     /**
      * Set the value for the DD object. This method supports the mutating
@@ -260,23 +255,23 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
 
 
     /**
-     * Returns a new DoubleDouble whose value is <tt>(this + y)</tt>.
+     * Returns an amended DoubleDouble whose value is <tt>(this + y)</tt>.
      *
      * @param y the addend
      * @return <tt>(this + y)</tt>
      */
     public final DoubleDouble add(DoubleDouble y) {
-        return copy(this).selfAdd(y);
+        return selfAdd(y);
     }
 
     /**
-     * Returns a new DoubleDouble whose value is <tt>(this + y)</tt>.
+     * Returns an amended  DoubleDouble whose value is <tt>(this + y)</tt>.
      *
      * @param y the addend
      * @return <tt>(this + y)</tt>
      */
     public final DoubleDouble add(double y) {
-        return copy(this).selfAdd(y);
+        return selfAdd(y);
     }
 
     /**
@@ -398,25 +393,25 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
     }
 
     /**
-     * Returns a new DoubleDouble whose value is <tt>(this * y)</tt>.
+     * Returns an amended DoubleDouble whose value is <tt>(this * y)</tt>.
      *
      * @param y the multiplicand
      * @return <tt>(this * y)</tt>
      */
     public final DoubleDouble multiply(DoubleDouble y) {
         if (y.isNaN()) return createNaN();
-        return copy(this).selfMultiply(y);
+        return selfMultiply(y);
     }
 
     /**
-     * Returns a new DoubleDouble whose value is <tt>(this * y)</tt>.
+     * Returns an amended DoubleDouble whose value is <tt>(this * y)</tt>.
      *
      * @param y the multiplicand
      * @return <tt>(this * y)</tt>
      */
     public final DoubleDouble multiply(double y) {
         if (Double.isNaN(y)) return createNaN();
-        return copy(this).selfMultiply(y, 0.0);
+        return selfMultiply(y, 0.0);
     }
 
     /**
@@ -493,14 +488,14 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
     }
 
     /**
-     * Computes a new DoubleDouble whose value is <tt>(this / y)</tt>.
+     * Computes an amended DoubleDouble whose value is <tt>(this / y)</tt>.
      *
      * @param y the divisor
      * @return a new object with the value <tt>(this / y)</tt>
      */
     public final DoubleDouble divide(double y) {
         if (Double.isNaN(y)) return createNaN();
-        return copy(this).selfDivide(y, 0.0);
+        return selfDivide(y, 0.0);
     }
 
     /**
@@ -596,8 +591,10 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
         if (fhi == hi) {
             flo = Math.floor(lo);
         }
+        this.hi = fhi;
+        this.lo = flo;
         // do we need to renormalize here?
-        return new DoubleDouble(fhi, flo);
+        return this;
     }
 
     /**
@@ -872,12 +869,12 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
     }
 
     /**
-     * Converts this value to the nearest integer.
+     * Converts this value to the nearest long.
      *
-     * @return the nearest integer to this value
+     * @return the nearest long to this value
      */
-    public int intValue() {
-        return (int) hi;
+    public long longValue() {
+        return (long) hi;
     }
 
     /*------------------------------------------------------------
@@ -1331,6 +1328,5 @@ public strictfp final class DoubleDouble implements Serializable, Comparable<Dou
             return val2.negate();
         }
         return val2;
-
     }
 }
